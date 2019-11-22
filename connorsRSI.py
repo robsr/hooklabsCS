@@ -33,7 +33,6 @@ def updownLength(data):
     streaks = pd.Series(data=np.zeros(data.size))
     curr_streak = 0
     flag='neutral'
-
     for i in range(1, len(data)):
         if data[i] > data[i-1]:
             if flag != 'up':
