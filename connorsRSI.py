@@ -1,35 +1,29 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import seaborn as sns
+import datetime as dt
 from matplotlib.dates import DateFormatter
 import matplotlib.dates as mdates
-sns.set_style('darkgrid')
 
 '''
 all the definitions taken from here
 https://www.tradingview.com/wiki/Connors_RSI_(CRSI)#CALCULATION
+and price data downloaded from yahoo finance
 '''
-
-def calcNA(series):
-    return series.isna().sum()
 
 def RSI(data, period):
     '''
     100 - 100/(1 + avggain/avgloss)
     '''
-    # print(data[:10])
     pro_los = data.diff().dropna()
     profit_days = pro_los.copy()
     loss_days = np.abs(pro_los.copy())
     profit_days[pro_los < 0] = 0
     loss_days[pro_los > 0] = 0
-    # print(loss_days)
 
     avg_rolling_gain = profit_days.rolling(period).mean()
     avg_rolling_loss = loss_days.rolling(period).mean()
-    rsi = 100 - 100/(1 + avg_rolling_gain/avg_rolling_loss)
-    
+    rsi = 100 - 100/(1 + avg_rolling_gain/avg_rolling_loss)    
     return rsi
 
 def updownLength(data):
@@ -59,8 +53,6 @@ def updownLength(data):
             flag = 'neutral'
     return streaks
 
-
-
 def ROC(data, lb_period):
     '''
     %of no. of values within the last look back period that are below the current price change percentage
@@ -70,12 +62,12 @@ def ROC(data, lb_period):
     roc = pd.Series(diff_data/old_data)
     return roc
 
+
 if __name__=="__main__":
 
     #daily appl data for last 1 year
     ## FROM ['2018-11-21'] to ['2019-11-21']
     data = pd.read_csv('AAPL.csv', index_col='Date')
-
     prices = [pr for pr in data.Close]
     prices = pd.Series(prices)
 
@@ -84,9 +76,7 @@ if __name__=="__main__":
     RSI_UPDOWN_PERIOD = 2
     ROC_LB_PERIOD = 50
 
-
-
-    # #3components
+    ##3components
     C1 = RSI(prices, RSI_PERIOD)
     C2 = RSI(updownLength(prices), RSI_UPDOWN_PERIOD)    
     C3 = ROC(prices, ROC_LB_PERIOD)
@@ -94,14 +84,16 @@ if __name__=="__main__":
     # defining connorsRSI
     crsi = (C1 + C2 + C3)/3
 
-    #top plot the results it only makes sense after the first ROC_LB_period whichi is max among all the time periods
+    #PLOTTING
+    #plotting makes sense only after first 50 days i.e ROC_LB_period which is maximum among all the time periods
 
-    fig, ax = plt.subplots(figsize=(12, 8))
-    ax.plot(data.index.values, prices, label='price')
-    ax.plot(data.index.values, crsi, label='CRSI')
-    ax.set(xlabel='Date')
-    ax.xaxis.set_major_locator(mdates.WeekdayLocator(interval=2))
-    ax.xaxis.set_major_formatter(DateFormatter("%m-%d"))
-    
+    x = [dt.datetime.strptime(d,'%Y-%m-%d').date() for d in data.index]
+    plt.plot(x, prices, label='price')
+    plt.plot(x, crsi, label='CRSI')
+    plt.gca().xaxis.set_major_locator(mdates.WeekdayLocator(interval=2))
+    plt.gca().xaxis.set_major_formatter(DateFormatter("%d-%m"))
+    plt.xlabel('Date')
+    plt.xticks(rotation=45)
+    plt.grid()
     plt.legend()
     plt.show()
