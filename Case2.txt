@@ -1,0 +1,28 @@
+### TIME SERIES DATA EXTRAPOLATION ###
+
+1. Recurrent Neural Network Approach-- 
+   First transform the data into a supervised problem. We'll predict the Xt{price} using an impicit function f(X1, X2,...., Xt-1). This implcit function can be \
+   learned using a NN specifically a sequential LSTM/GRU cells. We can turn our time-series stationary i.e removing any trend thats present. Because trendless data \
+   is easier to model or rather learned in this case. After getting the prediction of the differences we have to invert our trend-removal process, which essentially \
+   means that prediction X_{t} = Y_{t} + X_{t-1}, where Y_{t} is the network prediction. Now we have to define a loss function to minimize, one thing that we can do \
+   is to define a MSE error at the final node of the sequence and than backpropogate it as usual. As data here is very fine on a time scale, due to which parameters \
+   learnt in LSTM(i.e all the memory gates) will be a certain advantage in this appraoch, as this high frequency data would scale fairly quickly with time. So we need \
+   a model that has some kind of forgettable memory. On top of it this HF data means more data for the network to train which is always benefitial for deep learning \
+   approaches.
+
+2. Markov Models--
+   We know that random walk hypothesis(stock price movements are in a random unpredictable at least for the short term) is followed by the asset prices. So its a fair \
+   assumption that stock follows k^{th} order Markov chain property(stock price at time t depend on last k stock prices). Something like a State-Transition-Model can be \
+   used. Let X_t be the stock price and Z_t be the corresponding latent variable that we will estimate. Basically, we'll now assume some distributions on these variables.\
+   A simple example of this can be ---- 
+                                         Z_{t}|Z_{t-1} = Z_{t-1} + e_t   {e_t is a white noise process}{notice first order markov assumption is being followed}
+				         X_{t}|Z_{t} = s_{t} + del_t     {e_t is a white noise process}
+		
+   Now, to infer from above process i.e. estimate  Z the correspoding X_i for i>t, we can something like kalman filters.
+
+
+3. Stochastic PDEs and ARIMA estimation--
+   We can also a follow a more classical way to generate the future data if we can somehow model the variance and the overall drift of the given data. Based on that we can \
+   can use something like Geometric Brownian Motion to simulate the future observation. Now estimate the variance and mean(drift) of the data using any methods, like \
+   MLE estimate, ARIMA estimates or even can calculate it directly i.e sample variance and sample mean. Now use GBM equation to generate data -
+                                                         X_{t} = \mu*X_{t}*dt + \sigma*X_{t}*e*\sqrt(dt)  {where e is white noise used in weiner process}
