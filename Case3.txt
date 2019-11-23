@@ -1,9 +1,23 @@
-###MARKET REGIME FILTER###
-##still have a few doubts about what exactly is the problem###
+#MARKET REGIME FILTER#
+##still have a few doubts about what exactly is the problem##
+###NOTES###
 
 Wth is a MGF???
-* dividing market into bearish and bullish somehow?? //classification using calender based patterns
+* dividing market into bearish and bullish somehow?? 
+* but why only two classes (a very crude assumption)?? //{multicalssification problem}
+* Most importantly why do we even need this?
+  Okkay, so we want to design a trading algorithm which is risk-averse/taking depending on the current market regime (bullish/bearish)!
 
- -Take top index of the country/or rather top 10-15 stocks and plot them in all the economic cycles historically.
- -Manually classify them -> then use a CNN to directly predict from images ->(this can be implemented in an online sense)!!!
+//classification using calender based patterns
+- Take top index of the country/or rather top 10-15 stocks and plot them in all the economic cycles historically.
+- Manually classify them -> then use a CNN to directly predict from images ->(this can be implemented in an online sense)!!!
+- something related to this has already been done like what??( yess every openai and RL gaming world they use images as input)
+
+//classification using NLP can be incorporated in this fs
+- Its always in the finance news whats bullish and bearish
+- focus on the specific terms and frequency
+- real time
+- specially brokerage services news(not sure)
+
+// think in more classical ways to do this more in terms of finance/technical indicators etc.
 
