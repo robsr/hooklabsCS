@@ -1,0 +1,9 @@
+###MARKET REGIME FILTER###
+##still have a few doubts about what exactly is the problem###
+
+Wth is a MGF???
+* dividing market into bearish and bullish somehow?? //classification using calender based patterns
+
+ -Take top index of the country/or rather top 10-15 stocks and plot them in all the economic cycles historically.
+ -Manually classify them -> then use a CNN to directly predict from images ->(this can be implemented in an online sense)!!!
+
